@@ -26,19 +26,26 @@
 
 </body>
 
-<script src="../js/jquery.js"></script> 
-<script src="../js/jquery.min.js"></script> 
-<script src="../js/common.js"></script> 
+<script src="js/jquery.js"></script> 
+<script src="js/jquery.min.js"></script> 
+<script src="js/common.js"></script> 
 
 <script>
 
 	var getMemberList = function() {
-		
+		//@RequestBody 만들기
+		// var memberBirthDay = $("#id").val();
+		// var requestBody = {
+		// 	birthDay:memberBirthDay,
+
+		// }
+
 		$.ajax({
 			url: apiHost + '/api/member/list/all',
 			method: 'GET',
 			contentType: 'application/json',
 			dataType: 'json',
+			//data: JSON.stringify(requestBody), @RequestBody 형식일떄 선업 
 			success: function(data, status, xhr) {
 				// 정상적으로 응답 받았을 경우에는 success 콜백이 호출되게 됩니다.
 				// 이 콜백 함수의 파라미터에서는 응답 바디, 응답 코드 그리고 XHR 헤더를 확인할 수 있습니다.
@@ -56,15 +63,13 @@
 					if (resultObject != null) {
 						$.each(resultObject.result, function (idx, member) {
 							console.log(member);
-							
+							//var parseMember = JSON.stringify(member);
 							tags.push("<tr>");
-							tags.push('<td>' + (Number(idx) + 1) + '</td>');
+								tags.push('<td>' + (Number(idx) + 1) + '</td>');
 							tags.push('<td>' + member.id + '</td>');
 							tags.push('<td>' + member.nickName + '</td>');
 							tags.push('</tr>');
-
-							$("#memDiv").html(tags);
-
+						$("#memDiv").html(tags);
 						});
 					}
 				} else {
