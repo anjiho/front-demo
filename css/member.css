@@ -1,63 +1,108 @@
 @charset "UTF-8";
-/* loginForm start */
+/* login start */
 
-.login-form * {
-    box-sizing: border-box;
-    font-family: 'Noto Sans KR', sans-serif;
-    border-radius: 5px;
-  }
-  .login-form {
-      width: 400px;
-      background-color: #EEEFF1;
-      margin-right: auto;
-      margin-left: auto;
-      margin-top: 50px;
-      text-align:center;
-      padding: 30px 10px 30px 10px;
-      border: none;    
-  }
-  
-  .text-field {
+    .login-form * {
+        box-sizing: border-box;
+        font-family: 'Noto Sans KR', sans-serif;
+        border-radius: 5px;
+    }
+    .login-form {
+        width: 400px;
+        background-color: #EEEFF1;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 50px;
+        text-align:center;
+        padding: 30px 10px 30px 10px;
+        border: none;    
+    }
+
+    .text-field {
         font-size: 14px;
         padding: 10px;
         border: none;
         width: 260px;
         margin-bottom: 10px;
-  }
-  .submit-btn {
-    font-size: 14px;
-    border: none;
-    padding: 10px;
-    width: 260px;
-    background-color:#9bb7d6;
-    margin-bottom: 30px;
-    color: white;
-  }
-  
-  #login_easy {
-      background-color: #FFC939;
-      color: white;
-  }
-  
-  .submit-btn-small{
-    font-size: 14px;
-    border: none;
-    padding: 10px;
-    width: 130px;
-    background-color:#9bb7d6;
-    margin-bottom: 10px;
-    color: white;
-    text-align: center;
-  }
-  .nologin{
-   text-align: center;
-  }
-  
-  #id_remember{
-   display:inline;
-  }
-  .nologin .searchbtn2{
-      cursor: pointer;
-  }
+    }
+    .submit-btn {
+        font-size: 14px;
+        border: none;
+        padding: 10px;
+        width: 260px;
+        background-color:#9bb7d6;
+        margin-bottom: 30px;
+        color: white;
+    }
 
-/* loginForm end */
+    #login_easy {
+        background-color: #FFC939;
+        color: white;
+    }
+
+    .submit-btn-small{
+        font-size: 14px;
+        border: none;
+        padding: 10px;
+        width: 130px;
+        background-color:#9bb7d6;
+        margin-bottom: 10px;
+        color: white;
+        text-align: center;
+    }
+    .nologin{
+        text-align: center; 
+    }
+
+    #id_remember{
+        display:inline;
+    }
+    .nologin .searchbtn2{
+        cursor: pointer;
+    }
+
+/* login end */
+    .text-field {
+        font-size: 14px;
+        padding: 10px;
+        border: none;
+        width: 400px;
+        margin-bottom: 10px;
+        background-color: #EEEFF1;
+    }
+    #input {
+        text-align: center;
+    }
+
+    #check_btn{
+        font-size: 14px;
+        border: none;
+        padding: 10px;
+        background-color: #9bb7d6;
+        color: white;
+        text-align: center;
+        width: 130px;
+        height:36px;
+        margin-bottom: 10px;
+        position: absolute
+    }
+
+    .info {
+        margin-bottom: 20px;
+    }
+
+    #next_btn,#reset_btn{
+        font-size: 14px;
+        border: none;
+        padding: 10px;
+        width: 130px;
+        background-color:#9bb7d6;
+        margin-bottom: 30px;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+    }
+    .text{
+        position:absolute;
+        left:25%;
+    }
+/* signup start */
