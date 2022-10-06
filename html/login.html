@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<title>Hugo Login</title>
+	<link rel="stylesheet" type="text/css" href="../css/member.css">
+</head>
+
+<body>
+
+    <div class="login-form">
+		<form name="frmLogin" id="frmLogin" method="post">
+		  <div class="login">
+				<input type="text" name="id" id="id" class="text-field" placeholder="아이디"><br/>
+				<input type="password" name="pwd" id="pwd" class="text-field" placeholder="비밀번호"><br/>
+				
+				<input type="checkbox" id="id_remember" name="id_remember" >아이디 저장<br/><br/>
+				
+				<input type="submit"  name="login" class="submit-btn" value="로그인"><br/>
+		  </div>
+		</form>
+		<hr style="border: thin 2px #808080;">
+	     <!-- 수정해야함 -->
+	    <div class="nologin">
+	      	<a>아직 회원이 아니세요?</a><br/>
+	      	<input type="button" name="signup" class="submit-btn-small" value="회원가입" onClick="location.href='agree.do'"> <br/>
+	      	<a class="searchbtn2" onClick="window.open('searchIdForm.do')">아이디&nbsp;&nbsp;·</a>
+	      	<a class="searchbtn2" onClick="window.open('searchPwForm.do')">&nbsp;&nbsp;비밀번호 찾기</a>
+			<!-- <input type="button" name="findID/PW" class="submit-btn-small" value="ID/PW찾기" > -->
+        </div>
+		
+		
+	</div>
+
+</body>
+
+<script src="../js/jquery.js"></script> 
+<script src="../js/jquery.min.js"></script> 
+<script src="../js/common.js"></script> 
+
+<script>
+    $('#frmLogin').submit(function(e){
+
+        e.preventDefault();
+
+        var id = $('#id').val();
+        var pwd = $('#pwd').val();
+        
+        var loginData = {
+            "id" : id,
+            "pwd" : pwd
+        }
+
+        $.ajax({
+            url : apiHost + '/api/member/login',
+            method : 'POST',
+            contentType : 'application/json',
+            dataType : 'json',
+            data : JSON.stringify(loginData),
+            success: function(data, status, xhr) {
+
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+                // 결과 닉네임 가져오기 
+                var nickName = data.result.NickName;
+                alert(resultCode);
+				
+				if (resultCode === 200) {
+					//정상로직 시작
+					alert(nickName +' 님 로그인 성공했습니다');
+
+                    // ****TODO****
+                    // loacation.href 이동 위치 설정 (home 화면) - 홈화면 미제작으로 나중에 설정할것 
+				} else {
+					//에러처리 
+                    alert('login failed 아이디와 패스워드를 확인하세요');
+				}
+  			},
+			  error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('서버오류');
+				}
+                if (xhr.code === 404) {
+                    alert('Not Found');
+                }
+			},
+        })
+    })
+
+</script>
+
+</html>
