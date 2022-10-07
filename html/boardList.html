@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<title>Hugo boardList</title>
+	<link rel="stylesheet" type="text/css" href="../css/board.css">
+</head>
+
+<body>
+<table align="center" width="90%">
+    <thead>
+        <th width="10%">No.</th>
+        <th width="35%">제목</th>
+        <th width="15%">id</th>
+        <th width="10%">첨부파일</th>
+        <th width="10%">조회수</th>
+        <th width="20%">작성일자</th>
+    </thead>
+    <tbody id="boardDiv"></tbody>
+</table>
+</body>
+
+<script src="../js/jquery.js"></script> 
+<script src="../js/jquery.min.js"></script> 
+<script src="../js/common.js"></script> 
+
+<script>
+    var getBoardList = function() {
+		
+		$.ajax({
+			url: apiHost + '/hugo/board/list/all',
+			method: 'GET',
+			contentType: 'application/json',
+			dataType: 'json',
+			success: function(data, status, xhr) {
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+				
+				if (resultCode === 200) {
+					//정상로직 시작
+					var tags = [];
+					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
+					$("#boardDiv").empty();
+					
+					if (data != null) {
+						$.each(data.result, function (idx, board) {
+                            console.log(board.title);
+                            
+                            // 앵커태그 추가 해야함 - 상세보기 
+							tags.push("<tr>");
+							tags.push('<td>' + (Number(idx) + 1) + '</td>');
+							tags.push('<td>' + board.title + '</td>');
+							tags.push('<td>' + board.id + '</td>');
+                            tags.push('<td>' + board.ofile + '</td>');
+                            tags.push('<td>' + board.visitCount + '</td>');
+                            tags.push('<td>' + board.createDate + '</td>');
+							tags.push('</tr>');
+
+							$("#boardDiv").html(tags);
+						});
+					}
+				} else if(resultCode === 550) {
+                    alert("게시글이 없습니다");
+				} else {
+                    alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                }
+  			},
+			  error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('500');
+				}
+			},
+		})
+	}
+
+	$(document).ready(function() {
+		getBoardList();
+	});
+</script>
+
+</html>
