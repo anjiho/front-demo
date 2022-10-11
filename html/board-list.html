@@ -42,48 +42,40 @@
 <script src="../js/jquery.twbsPagination.js"></script>
 
 <script>
-	window.pagObj = $('#pagination').twbsPagination({
-        totalPages: [[10]], // 전체 페이지
-        startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
-        visiblePages: 10, // 최대로 보여줄 페이지
-        prev: "‹", // Previous Button Label
-        next: "›", // Next Button Label
-        first: '«', // First Button Label
-        last: '»', // Last Button Label
-        onPageClick: function (event, page) { // Page Click event
-            console.info("current page : " + page);
-        }
-    }).on('page', function (event, page) {
-		alert(page);
-        getBoardList();
-    });
+	var totalBoardCount = 0;
 
-    var getBoardList = function() {
+    var getBoardList = function(startPage, listNumber) {
 		
 		$.ajax({
 			url: apiHost + '/hugo/board/list/all',
 			method: 'GET',
 			contentType: 'application/json',
+			data : {
+				startPage : startPage,
+				listNumber : listNumber
+			},
 			dataType: 'json',
 			success: function(data, status, xhr) {
 				//결과 코드 값 파싱
 				var resultCode = data.resultCode;
 				
 				if (resultCode === 200) {
+					//alert(data.result.totalCount);
+					totalBoardCount = data.result.totalCount;
 					//정상로직 시작
 					var tags = [];
 					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
 					$("#boardDiv").empty();
 					
 					if (data != null) {
-						$.each(data.result, function (idx, board) {
+						$.each(data.result.boardInfo, function (idx, board) {
                             console.log(board.title);
                             
 							tags.push("<tr>");
 							tags.push('<td>' + (Number(idx) + 1) + '</td>');
 							// id 를 로그인 한 사람의 id로 받아야 함 
 							// 해당 값의 제이슨이 나오는데 boardDTL.html 로 get형식의 boardIdx와 로그인 memberId를 넘겨서 받는 방법..? 
-							tags.push('<td> <a href="http://localhost:8080/hugo/board/detail/boardIdx/'+ board.boardIdx+'/id/'+board.id+'">' + board.title + '</a></td>');
+							tags.push('<td class="tableTd"><a data-idx='+ board.boardIdx +' data-memberid='+ board.id +'>' + board.title + '</a></td>');
 							tags.push('<td>' + board.id + '</td>');
                             tags.push('<td>' + board.ofile + '</td>');
                             tags.push('<td>' + board.visitCount + '</td>');
@@ -108,8 +100,49 @@
 	}
 
 	$(document).ready(function() {
-		getBoardList();
+		var listNumber = 5;
+		//제일 처음불러올때는 고정 값
+		getBoardList(0, listNumber);
+
+		var totalPageNum = 5;
+		
+		//페이징 관련 스크립트 ( 참고 URL >> https://data-make.tistory.com/670 )
+		window.pagObj = $('#pagination').twbsPagination({
+			totalPages: [[totalPageNum]], // 전체 페이지
+			startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
+			visiblePages: 5, // 최대로 보여줄 페이지
+			prev: "‹", // Previous Button Label
+			next: "›", // Next Button Label
+			first: '«', // First Button Label
+			last: '»', // Last Button Label
+			onPageClick: function (event, page) { // Page Click event
+				console.info("current page : " + page);
+			}
+		}).on('page', function (event, page) {
+			alert('clicked page :: ' + page);
+			alert('totalBoardCount :: ' +  totalBoardCount);
+			getBoardList(page, totalBoardCount);
+		});
+
 	});
+
+	$(document).on('click', '.tableTd', function(e){
+		var idx = $(this).find('a').data('idx');
+		var memberId = $(this).find('a').data('memberid');
+
+		/**
+		 * 페이지 이동 방식 
+		 * 1. GET
+		 * 2. POST
+		 * 3. localStorage
+		 * */
+		//urlencode() 함수를 활용해서 페이지 이동 해보기
+		location.href = "../html/board-detail.html?boardIdx=" + idx + "&memberId=" + memberId;
+		
+		
+	})
+	
+	//href="http://localhost:8080/hugo/board/detail/boardIdx/'+ board.boardIdx+'/id/'+board.id+'"
 </script>
 
 </html>
