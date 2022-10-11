@@ -1,1 +1,127 @@
 @charset "UTF-8";
+
+/* boardDTL*/
+#list {
+	display : inline-block;
+	position : static;
+	width : 11%;
+	text-align:right;
+}
+#reply {
+	display : inline-block;
+	position : static;
+	width : 80%;
+	text-align : left;
+}
+#replyBox {
+	width : 90%;
+	margin : 0 auto;
+}
+#boardTitle{
+	text-align : center;
+	margin : auto;
+}
+#like {
+	display : inline-block;
+	position : static;
+	width : 8%;
+}
+#date{
+	display : inline-block;
+	position : static;
+	width :85%;
+}
+.likeReply{
+	padding : 5px 0;
+	border-bottom : solid black 1px;
+}
+.DTLHeader{
+	border-bottom: solid 1px black;
+	border-top : solid 3px black;
+}
+.DTLLine { border-bottom: solid 1px black; }
+.repleHead{
+	display : inline-block;
+	position : static;
+	font-size : 20px;
+	padding : 5px;
+	margin : 2px;
+}
+#declaration{
+	width : 5% ;
+	text-align : right;
+	cursor: pointer;
+}
+.replyContainer {
+	margin : 15px;
+}
+#replyContent{
+	display : inline-block;
+	position : static;
+	width : 80%;
+	text-align: left;
+}
+.enterReplyContainer{
+	width : 95%;
+	height : 130px;
+	background:#E6E6E6;
+	border-top : 1px #E6E6E6 solid;
+	margin-left:1%;
+	padding : 8px;	
+	margin-bottom : 10px;
+	border-radius : 0.3em;
+	margin-top:5px;
+}
+.enterReply{
+	display : inline-block;
+	position : static;
+	width : 75%;
+	height : 80%;
+	text-align : left;
+	margin : 10px 0 0 10px;
+}
+#reReply{
+	display : inline-block;
+	position : static;
+	width : 19%;
+	text-align : right;
+	cursor: pointer;
+}
+.replyEnterBtn{
+	display : inline-block;
+	position : absolute;
+	text-align : right;
+	margin-top : 25px;
+	width : 15%;
+}
+#replyBtn{
+	width : 90%;
+	height : 50px;
+	border-radius : 0.5em;
+}
+#reReplyContainer{
+	display : none;
+}
+.modBtn,.delBtn {
+	width : 90px;
+	height : 40px;
+	font-size : 16px;
+	border-radius : 0.4em;
+	margin : 10px auto;
+	background-color : #9bb7d6;
+}
+.modAndDel {
+	text-align: right;
+    padding-right: 5%;
+}
+#replyId {
+	width : 100px;
+}
+#replyDelete {
+	float : right;
+	margin-right:20px;
+	margin-top:5px;
+	cursor: pointer;
+}
+    
+/* boardDTL 종료 */
