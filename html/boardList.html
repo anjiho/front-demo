@@ -4,6 +4,18 @@
 	<meta charset="utf-8">
 	<title>Hugo boardList</title>
 	<link rel="stylesheet" type="text/css" href="../css/board.css">
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+
+	<style>
+		.paging-div {
+			padding: 15px 0 5px 10px;
+			display: table;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body>
@@ -18,13 +30,34 @@
     </thead>
     <tbody id="boardDiv"></tbody>
 </table>
+<div class="paging-div">
+	<ul class="pagination" id="pagination"></ul>
+  </div>
 </body>
 
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script> 
+<script src="../js/jquery.twbsPagination.js"></script>
 
 <script>
+	window.pagObj = $('#pagination').twbsPagination({
+        totalPages: [[10]], // 전체 페이지
+        startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
+        visiblePages: 10, // 최대로 보여줄 페이지
+        prev: "‹", // Previous Button Label
+        next: "›", // Next Button Label
+        first: '«', // First Button Label
+        last: '»', // Last Button Label
+        onPageClick: function (event, page) { // Page Click event
+            console.info("current page : " + page);
+        }
+    }).on('page', function (event, page) {
+		alert(page);
+        getBoardList();
+    });
+
     var getBoardList = function() {
 		
 		$.ajax({
