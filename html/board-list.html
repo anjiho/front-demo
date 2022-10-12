@@ -106,12 +106,15 @@
 						alert('게시글이 없습니다');
 						totalPageNum = 1;
 					} else {
+						alert(Math.ceil((totalBoardCount/listNumber)));
 						if(totalBoardCount % listNumber == 0) {
 							totalPageNum = (totalBoardCount/listNumber)-1;
 						} else {
-							totalPageNum = (totalBoardCount/listNumber);
+							totalPageNum = 1;
+							//totalPageNum = (totalBoardCount/listNumber);
 						}
 					}
+					
 
 					$('#pagination').twbsPagination({
 						totalPages: [[totalPageNum]], // 전체 페이지
