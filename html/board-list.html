@@ -22,7 +22,7 @@
 	<div id="listCount">
 		페이지당 게시글 : <select name="listNumber" id="listNumber">
 			<option value="10" >10개</option>
-			<option value="20" selected="selected">20개</option>
+			<option value="2" selected="selected">20개</option>
 			<option value="30">30개</option>
 		</select>
 	</div>
@@ -52,6 +52,7 @@
 	//var totalBoardCount = 0;
 
     var getBoardList = function(startPage, listNumber) {
+		//alert(startPage);
 		$.ajax({
 			url: apiHost + '/hugo/board/list/all',
 			method: 'POST',
@@ -100,6 +101,7 @@
 							$("#boardDiv").html(tags);
 						});
 					}
+
 					$('#pagination').twbsPagination({
 						totalPages: [[totalBoardCount]], // 전체 페이지
 						startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
@@ -110,9 +112,13 @@
 						last: '»', // Last Button Label
 						onPageClick: function (event, page) { // Page Click event
 							console.info("current page : " + page);
-							alert('totalCount >> ' + $('#totalBoardCount').val())
+							//alert('totalCount >> ' + $('#totalBoardCount').val());
 						}
-					})
+					}).on('page', function (event, page) {
+						// alert('clicked page :: ' + page);
+						// alert('totalBoardCount :: ' +  totalBoardCount);
+						getBoardList(1, 2);
+					});
 				} else if(resultCode === 550) {
                     alert("게시글이 없습니다");
 				} else {
