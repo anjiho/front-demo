@@ -20,8 +20,8 @@
 <body>
 	<div id="listCount">
 		페이지당 게시글 : <select name="listNumber" id="listNumber">
-			<option value="10" >10개</option>
-			<option value="20" selected="selected">20개</option>
+			<option value="10" selected="selected">10개</option>
+			<option value="20" >20개</option>
 			<option value="30">30개</option>
 		</select>
 	</div>
@@ -61,6 +61,7 @@
 				listNumber : listNumber
 			},
 			dataType: 'json',
+			async:false,
 			success: function(data, status, xhr) {
 				//결과 코드 값 파싱
 				var resultCode = data.resultCode;
@@ -68,17 +69,14 @@
 				
 				if (resultCode === 200) {
 
-					// 여기선 65를 가져옴 
-					console.log(data.result.totalCount);
-
 					totalBoardCount = data.result.totalCount;
+					// 여기선 65를 가져옴 
+					console.log(totalBoardCount);
+
 					//정상로직 시작
 					var tags = [];
 					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
 					$("#boardDiv").empty();
-
-					// input 태그 hidden 속성을 이용해 totalBoardCount 숫자 입력 
-					tags.push('<input type="hidden" id="totalBoardCount" name="totalBoardCount" value="'+totalBoardCount+'"/>');
 					
 					if (data != null) {
 						$.each(data.result.boardInfo, function (idx, board) {
@@ -115,15 +113,11 @@
 	$(document).ready(function() {
 
 		var listNumber = $('#listNumber').val();
-		// 초기 설정인 10 나옴 
+		// 초기 설정인 20 나옴 
 		alert(listNumber);
 
 		//제일 처음불러올때는 고정 값
 		getBoardList(0, listNumber);
-
-		totalBoardCount = $('#totalBoardCount').val();
-		// TODO undifined 나옴.. 
-		alert('totalBoardCount ::'+totalBoardCount);
 		
 		var totalPageNum;
 
@@ -132,9 +126,9 @@
 			totalPageNum = 10;
 		} else {
 			if(totalBoardCount % listNumber == 0) {
-				totalPageNum = totalBoardCount/listNumber;
+				totalPageNum = (totalBoardCount/listNumber) -1;
 			} else {
-				totalPageNum = (totalBoardCount/listNumber)+1;
+				totalPageNum = totalBoardCount/listNumber;
 			}
 		}
 		
