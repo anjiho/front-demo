@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-/* boardDTL*/
+/* board-detail */
 #list {
 	display : inline-block;
 	position : static;
@@ -124,4 +124,11 @@
 	cursor: pointer;
 }
     
-/* boardDTL 종료 */
+/* board-detail 종료 */
+
+/* board-list */
+#listCount {
+    float: right;
+    margin-right: 50px;
+}
+/* board-list End*/
