@@ -20,7 +20,8 @@
 <body>
 	<input type="hidden" id="totalBoardCount" name="totalBoardCount" value="0"/>
 	<div id="listCount">
-		페이지당 게시글 : <select name="listNumber" id="listNumber">
+		페이지당 게시글 : 
+		<select name="listNumber" id="listNumber">
 			<option value="10" >10개</option>
 			<option value="20" selected="selected">20개</option>
 			<option value="30">30개</option>
@@ -107,9 +108,9 @@
 						totalPageNum = 1;
 					} else {
 						if(totalBoardCount % listNumber == 0) {
-							totalPageNum = (totalBoardCount/listNumber)-1;
-						} else {
 							totalPageNum = (totalBoardCount/listNumber);
+						} else {
+							totalPageNum = (totalBoardCount/listNumber)+1;
 						}
 					}
 
@@ -123,7 +124,6 @@
 						last: '»', // Last Button Label
 						onPageClick: function (event, page) { // Page Click event
 							console.info("current page : " + page);
-							alert('totalCount >> ' + $('#totalBoardCount').val())
 						}
 					}).on('page', function (event, page) {
 						getBoardList(page, listNumber);
