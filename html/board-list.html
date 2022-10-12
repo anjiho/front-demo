@@ -19,11 +19,15 @@
 
 <body>
 	<div id="listCount">
-		페이지당 게시글 : <select name="listNumber" id="listNumber">
-			<option value="10" selected="selected">10개</option>
-			<option value="20" >20개</option>
-			<option value="30">30개</option>
-		</select>
+		<form action="./board-list.html" method="POST" >
+			페이지당 게시글 : 
+			<select name="listNumber" id="listNumber">
+				<option value="10">10개</option>
+				<option value="20">20개</option>
+				<option value="30">30개</option>
+			</select>
+			<input type="submit" value="확인"/>
+		</form>
 	</div>
 <table align="center" width="90%">
     <thead>
@@ -113,7 +117,7 @@
 	$(document).ready(function() {
 
 		var listNumber = $('#listNumber').val();
-		// 초기 설정인 20 나옴 
+		// 초기 설정인 10 나옴 
 		alert(listNumber);
 
 		//제일 처음불러올때는 고정 값
