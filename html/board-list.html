@@ -53,7 +53,7 @@
     var getBoardList = function(startPage, listNumber) {
 		
 		$.ajax({
-			url: apiHost + '/hugo/board/list/all',
+			url: apiHost + '/hugo/board/list/all?startPage='+startPage+'&listNumber='+listNumber+'',
 			method: 'POST',
 			contentType: 'application/json',
 			data : {
@@ -129,7 +129,7 @@
 
 		if(totalBoardCount == 0 || totalBoardCount == null) {
 			alert('게시글이 없습니다');
-			totalPageNum = 1;
+			totalPageNum = 10;
 		} else {
 			if(totalBoardCount % listNumber == 0) {
 				totalPageNum = totalBoardCount/listNumber;
