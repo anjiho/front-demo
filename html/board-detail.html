@@ -23,10 +23,31 @@
 		</div>
 		<div>
 			<div class="repleHead"><b>댓글</b></div>
-			<div id="replyContentHead"></div>
-			
+			<div>
+				<table id="replyContent" width="95%">
+
+				</table>
+			</div>
+		</div>
+		<div>
+			<!-- TODO ajax로 넘기는 방법? -->
+			<form action="/hugo/board/reply/write" method="POST">
+				<table>
+					<tr>
+						<!-- TODO 로그인 되어있을때 loginNickName 나올 수 있게, 로그인이 아닐 시 guest 호출 guest 일때는 댓글 작성 불가  -->
+						<td id="loginId"></td>
+						<td>
+							<textarea></textarea>
+						</td>
+						<td>
+							<input type="submit" value="댓글 작성"/>
+						</td>
+					</tr>
+				</table>
+			</form>
 		</div>
 	</div>
+
 
 	
 
@@ -69,16 +90,23 @@
 					//정상로직 시작
 					var str = '';
 					var replyCountStr = '';
+					var replyInfo = [];
+					var tags = [];
 					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
 					$("#boardContent").empty();
 					$('#reply').empty();
+					$("#replyContent").empty();
 					
 					if (data != null) {
 
 						var boardData = data.result;
+						replyInfo = data.result.replyInfo;
 						var replyCount = data.result.replyInfo.length;
 
+						// TODO --  Object object 로 저장되는데 Array 를 그대로 가져올 방법!? 
+						console.log('replyInfo ::'+replyInfo);
 						console.log('replyCount :: '+replyCount);
+						console.log('data.result :::'+boardData);
 
 							str += '<tr>';
 								str += '<td>' + boardData.boardIdx + '</td>';
@@ -93,12 +121,28 @@
 
 							// TODO 이미지 받아서 이미지 추가해야함 
 
-							// 댓글 숫자 추가
+							// 댓글 총 갯수 추가
 							replyCountStr += '<i class="fa-regular fa-comment-dots"></i>';
 							replyCountStr += '&nbsp;댓글수&nbsp;' + replyCount; 
 
 							$("#boardContent").html(str);
 							$('#reply').html(replyCountStr);
+
+							// 댓글 반복문 활용하여 삽입 
+							$.each(data.result.replyInfo, function (idx, reply) {
+
+							tags.push('<tr>');
+								tags.push('<td>' + reply.nickName + '</td>');
+								tags.push('<td>' + reply.writeDate + '</td>');
+								// TODO 신고하기 버튼 구현하기 
+								tags.push('<td>신고하기 버튼 </td>');
+								tags.push('</tr>');
+							tags.push('<tr>');
+								tags.push('<td colspan="3">'+reply.content+'</td>');
+							tags.push('</tr>');
+
+							$("#replyContent").html(tags);
+							});
 					}
 				} else if(resultCode === 550) {
                     alert("게시글이 없습니다");
@@ -165,46 +209,6 @@
 			},
 		})
 	}
-
-	// 댓글 정보 가져오기
-	var getReplysByBoardIdx = function() {
-
-		$.ajax({
-			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+id+'',
-			method: 'GET',
-			contentType: 'application/json',
-			dataType: 'json',
-			data : {
-				"boardIdx" : boardIdx,
-				"id" : id
-			},
-			success: function(data, status, xhr) {
-				//결과 코드 값 파싱
-				var resultCode = data.resultCode;
-				
-				if (resultCode === 200) {
-					//정상로직 시작
-					var str = '';
-					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
-					$("#boardContent").empty();
-					
-					if (data != null) {
-
-					}
-				} else if(resultCode === 550) {
-                    alert("게시글이 없습니다");
-				} else {
-                    alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-                }
-  			},
-			  error: function(xhr, status, error) {
-				if (xhr.code === 500) {
-					alert('500');
-				}
-			},
-		})
-	}
-
 
 	$(document).ready(function() {
 		getBoard();
