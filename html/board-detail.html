@@ -15,39 +15,90 @@
 			<th class="DTLHeader" width="20%">게시물작성자</th>
 		</thead>
         <tbody id="boardContent"></tbody>
+	</table>
+	<div id="replyBox">
+		<div class="likeReply">
+			<span id="like" style="cursor:pointer"></span>
+			<span id="reply"></span>
+		</div>
+		<div>
+			<div class="repleHead"><b>댓글</b></div>
+			<div id="replyContentHead"></div>
+			
+		</div>
+	</div>
+
+	
 
 </body>
 
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
 
 <script>
+
+	// 파라미터값 가져오기 
+	function getParameter(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	var id = getParameter("memberId");
+	var boardIdx = getParameter("boardIdx");
+
+	// board 정보 가져오기 
        var getBoard = function() {
 		
 		$.ajax({
-			url: apiHost + '/hugo/board/detail/boardIdx/{boardIdx}/id/{id}',
+			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+id+'',
 			method: 'GET',
 			contentType: 'application/json',
 			dataType: 'json',
+			data : {
+				"boardIdx" : boardIdx,
+				"id" : id
+			},
 			success: function(data, status, xhr) {
 				//결과 코드 값 파싱
 				var resultCode = data.resultCode;
 				
 				if (resultCode === 200) {
 					//정상로직 시작
-					var tags = [];
+					var str = '';
+					var replyCountStr = '';
 					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
 					$("#boardContent").empty();
+					$('#reply').empty();
 					
 					if (data != null) {
-                            
-							tags.push("<tr>");
-							tags.push('<td>' + data.boardIdx + '</td>');
-							tags.push('</tr>');
 
-							$("#boardContent").html(tags);
-						
+						var boardData = data.result;
+						var replyCount = data.result.replyInfo.length;
+
+						console.log('replyCount :: '+replyCount);
+
+							str += '<tr>';
+								str += '<td>' + boardData.boardIdx + '</td>';
+								str += '<td> ['+boardData.writeHeader+']' + boardData.title + '</td>';
+								str += '<td>' + boardData.visitCount + '</td>';
+								str += '<td>' + boardData.id + '</td>';
+							str += '</tr>';
+
+							str += '<tr>';
+								str += '<td colspan="4">'+boardData.content+'</td>';
+							str += '</tr>';
+
+							// TODO 이미지 받아서 이미지 추가해야함 
+
+							// 댓글 숫자 추가
+							replyCountStr += '<i class="fa-regular fa-comment-dots"></i>';
+							replyCountStr += '&nbsp;댓글수&nbsp;' + replyCount; 
+
+							$("#boardContent").html(str);
+							$('#reply').html(replyCountStr);
 					}
 				} else if(resultCode === 550) {
                     alert("게시글이 없습니다");
@@ -63,8 +114,101 @@
 		})
 	}
 
+	// 좋아요 정보 가져오기
+	var likeBoard = function() {
+
+		$.ajax({
+			url: apiHost + '/hugo/board/likeTable/id/'+id+'/boardIdx/'+boardIdx+'',
+			method: 'GET',
+			contentType: 'application/json',
+			data : {
+				"boardIdx" : boardIdx,
+				"id" : id
+			},
+			dataType: 'json',
+			success: function(data, status, xhr) {
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+				console.log('like resultCode ::'+resultCode);
+				
+				if (resultCode === 200) {
+					//정상로직 시작
+					var str = '';
+					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
+					$("#like").empty();
+					var likeCount = data.result.likeCount;
+
+					var like = data.result.likeTable;
+					console.log(like);
+					
+					if (data != null) {
+						if(like.likeYN == 0 || like.likeYN == null) {
+							str += '<i class="fa-regular fa-heart" style="color:red;"></i>';
+							str += '&nbsp;좋아요&nbsp;'+ likeCount;
+							
+							$("#like").html(str);
+						} else if(like.likeYN == 1){
+							str += '<i class="fa-solid fa-heart" style="color:red;"></i>';
+							str += '&nbsp;좋아요&nbsp;'+ likeCount;
+
+							$("#like").html(str);
+						}
+					}
+				} else {
+                    alert('좋아요 로드시 오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                }
+  			},
+			  error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('500');
+				}
+			},
+		})
+	}
+
+	// 댓글 정보 가져오기
+	var getReplysByBoardIdx = function() {
+
+		$.ajax({
+			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+id+'',
+			method: 'GET',
+			contentType: 'application/json',
+			dataType: 'json',
+			data : {
+				"boardIdx" : boardIdx,
+				"id" : id
+			},
+			success: function(data, status, xhr) {
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+				
+				if (resultCode === 200) {
+					//정상로직 시작
+					var str = '';
+					// 기존테이블 데이터 지우고 행을 추가해야한다면 아래 empty() 추가
+					$("#boardContent").empty();
+					
+					if (data != null) {
+
+					}
+				} else if(resultCode === 550) {
+                    alert("게시글이 없습니다");
+				} else {
+                    alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                }
+  			},
+			  error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('500');
+				}
+			},
+		})
+	}
+
+
 	$(document).ready(function() {
 		getBoard();
+		likeBoard();
 	}); 
 
 </script>

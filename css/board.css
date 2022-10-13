@@ -24,7 +24,7 @@
 #like {
 	display : inline-block;
 	position : static;
-	width : 8%;
+	width : 15%;
 }
 #date{
 	display : inline-block;
@@ -132,3 +132,4 @@
     margin-right: 50px;
 }
 /* board-list End*/
+
