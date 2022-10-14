@@ -30,14 +30,13 @@
 			</div>
 		</div>
 		<div>
-			<!-- TODO ajax로 넘기는 방법? -->
-			<form action="/hugo/board/reply/write" method="POST">
+			<form id="replyForm" method="POST">
 				<table>
 					<tr>
 						<!-- TODO 로그인 되어있을때 loginNickName 나올 수 있게, 로그인이 아닐 시 guest 호출 guest 일때는 댓글 작성 불가  -->
-						<td id="loginId"></td>
+						<td id="loginNickName"></td>
 						<td>
-							<textarea></textarea>
+							<textarea id="replyWriteContent"></textarea>
 						</td>
 						<td>
 							<input type="submit" value="댓글 작성"/>
@@ -213,6 +212,71 @@
 	$(document).ready(function() {
 		getBoard();
 		likeBoard();
+
+		$('#replyForm').submit(function() {
+			var nickName = $('#loginNickName').val();
+            var content = $('#replyWriteContent').val();
+
+            if(nickName == "guest") {
+                alert("로그인한 사용자만이 댓글을 작성할 수 있습니다.");
+                return false;
+            }
+            else if(content == "") {
+                alert("댓글을 입력해주세요");
+                $('#replyWriteContent').focus();
+                return false;
+            }
+            else {
+                var writeData = {
+                    // TODO 로그인 닉네임 받아와야함 
+                    "nickName" : "string",
+					"content" : content,
+					"boardIdx" : boardIdx
+                }
+
+                $.ajax({
+                    url : apiHost + '/hugo/board/reply/write',
+                    method : 'POST',
+                    contentType : 'application/json',
+                    dataType : 'json',
+                    data : JSON.stringify(writeData),
+                    success: function(data, status, xhr) {
+
+                        // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄지며 댓글은 입력이됨.. 
+                        alert('success 진입');
+
+                        //결과 코드 값 파싱
+                        var resultCode = data.resultCode;
+                        alert(resultCode);
+
+                        //결과 idx 값 받아오기
+                        var boardReplyIdx = data.result.boardReplyIdx;
+
+                        if (resultCode === 200) {
+                            //정상로직 시작
+                            alert(boardReplyIdx+'번 댓글이 작성 완료되었습니다');
+
+                            location.reload();
+
+                        } else if (resultCode === 600) {
+                            alert('제목을 입력해주세요');
+                            $('#title').focus();
+
+                        } else {
+                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.code === 500) {
+                            alert('서버오류');
+                        }
+                        if (xhr.code === 404) {
+                            alert('Not Found');
+                        }
+                    },
+                })
+            }
+		})
 	}); 
 
 </script>
