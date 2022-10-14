@@ -135,9 +135,13 @@
 								tags.push('<td>' + reply.writeDate + '</td>');
 								// TODO 신고하기 버튼 구현하기 
 								tags.push('<td>신고하기 버튼 </td>');
+								tags.push('<td><input type="hidden" value="'+reply.boardReplyIdx+'"/></td>');
 								tags.push('</tr>');
 							tags.push('<tr>');
-								tags.push('<td colspan="3">'+reply.content+'</td>');
+								tags.push('<td colspan="4">'+reply.content+'</td>');
+							tags.push('</tr>');
+							tags.push('<tr>');
+								tags.push('<td colspan="4"><input type="button" id="deleteReply" value="삭제"/></td>');
 							tags.push('</tr>');
 
 							$("#replyContent").html(tags);
@@ -278,6 +282,54 @@
             }
 		})
 	}); 
+
+	// 댓글 삭제 버튼 
+	$('#deleteReply').click(function() {
+
+		var deleteData = {
+			// TODO 로그인 한 닉네임 받아와야함
+			"nickName" : "string",
+			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? 
+			"boardReplyIdx" : boardReplyIdx
+		}
+
+		$.ajax({
+                    url : apiHost + '/hugo/board/reply/delete',
+                    method : 'POST',
+                    contentType : 'application/json',
+                    dataType : 'json',
+                    data : JSON.stringify(writeData),
+                    success: function(data, status, xhr) {
+
+                        alert('success 진입');
+
+                        //결과 코드 값 파싱
+                        var resultCode = data.resultCode;
+                        alert(resultCode);
+
+                        if (resultCode === 200) {
+                            //정상로직 시작
+                            alert('댓글이 삭제 되었습니다');
+                            location.reload();
+
+                        } else if (resultCode === 603) {
+                            alert('댓글이 존재하지 않습니다');
+                        } else if(resultCode === 710) {
+							alert('작성자 본인만 삭제가 가능합니다');
+						} else {
+                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.code === 500) {
+                            alert('서버오류');
+                        }
+                        if (xhr.code === 404) {
+                            alert('Not Found');
+                        }
+                    },
+        })
+	})
 
 </script>
 
