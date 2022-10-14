@@ -11,13 +11,15 @@
 		<thead align="center">
 			<th class="DTLHeader" width="10%">게시물번호</th>
 			<th class="DTLHeader" width="45%" align="left">제목</th>
-			<th class="DTLHeader" width="25%">조회수</th>
-			<th class="DTLHeader" width="20%">게시물작성자</th>
+			<th class="DTLHeader" width="15%">조회수</th>
+			<th class="DTLHeader" width="10%">게시물작성자</th>
+			<th class="DTLHeader" width="20%">이벤트기간</th>
 		</thead>
         <tbody id="boardContent"></tbody>
 	</table>
 	<div id="replyBox">
 		<div class="likeReply">
+			<!-- TODO 좋아요 클릭시 이벤트 만들기 -->
 			<span id="like" style="cursor:pointer"></span>
 			<span id="reply"></span>
 		</div>
@@ -46,7 +48,7 @@
 			</form>
 		</div>
 		<div>
-			<input type="button" id="boardDetailUpdate" value="수정"/>
+			<input type="button" id="boardDetailUpdate" value="수정" onclick="fn_boardUpdate()"/>
 			<input type="button" id="boardDelete" value="삭제" onclick="fn_boardDelete()"/>
 			<input type="button" id="boardList" value="목록" onclick="location.href='./board-list.html'"/>
 		</div>
@@ -114,10 +116,11 @@
 								str += '<td> ['+boardData.writeHeader+']' + boardData.title + '</td>';
 								str += '<td>' + boardData.visitCount + '</td>';
 								str += '<td>' + boardData.id + '</td>';
+								str += '<td>' + boardData.eventPeriod + '</td>';
 							str += '</tr>';
 
 							str += '<tr>';
-								str += '<td colspan="4">'+boardData.content+'</td>';
+								str += '<td colspan="5">'+boardData.content+'</td>';
 							str += '</tr>';
 
 							// TODO 이미지 받아서 이미지 추가해야함 
@@ -336,6 +339,8 @@
 	// 게시글 삭제
 	function fn_boardDelete() {
 
+		confirm('정말 삭제하시겠습니까?');
+
 		deleteData = {
 			"boardIdx" : boardIdx,
 			"id" : id
@@ -349,11 +354,8 @@
                     data : JSON.stringify(deleteData),
                     success: function(data, status, xhr) {
 
-                        alert('success 진입');
-
                         //결과 코드 값 파싱
                         var resultCode = data.resultCode;
-                        alert(resultCode);
 
                         if (resultCode === 200) {
                             //정상로직 시작
@@ -377,6 +379,15 @@
                         }
                     },
         })
+	}
+
+	// 게시글 수정
+	function fn_boardUpdate() {
+		
+		updateData = {
+
+		}
+
 	}
 
 </script>
