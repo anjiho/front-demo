@@ -38,6 +38,9 @@
     </thead>
     <tbody id="boardDiv"></tbody>
 </table>
+	<div>
+		<input type="button" id="writeBoard" value="글쓰기">
+	</div>
 	<div class="paging-div">
 		<ul class="pagination" id="pagination"></ul>
   	</div>
@@ -51,6 +54,9 @@
 
 <script>
 	//var totalBoardCount = 0;
+	$('#writeBoard').click(function(){
+		location.href = './board-write.html';
+	})
 
     var getBoardList = function(startPage, listNumber) {
 		$.ajax({
