@@ -103,7 +103,6 @@
 
 						var boardData = data.result;
 						replyInfo = data.result.replyInfo;
-						var replyCount = data.result.replyInfo.length;
 
 						// TODO --  Object object 로 저장되는데 Array 를 그대로 가져올 방법!? 
 						console.log('replyInfo ::'+replyInfo);
@@ -125,8 +124,16 @@
 							// TODO 이미지 받아서 이미지 추가해야함 
 
 							// 댓글 총 갯수 추가
-							replyCountStr += '<i class="fa-regular fa-comment-dots"></i>';
-							replyCountStr += '&nbsp;댓글수&nbsp;' + replyCount; 
+							if(replyInfo == null) {
+								replyCountStr += '<i class="fa-regular fa-comment-dots"></i>';
+								replyCountStr += '&nbsp;댓글수&nbsp;0';
+							} else {
+								var replyCount = data.result.replyInfo.length;
+								replyCountStr += '<i class="fa-regular fa-comment-dots"></i>';
+								replyCountStr += '&nbsp;댓글수&nbsp;' + replyCount; 
+							}
+
+							
 
 							$("#boardContent").html(str);
 							$('#reply').html(replyCountStr);
@@ -297,39 +304,39 @@
 		}
 
 		$.ajax({
-                    url : apiHost + '/hugo/board/reply/delete',
-                    method : 'POST',
-                    contentType : 'application/json',
-                    dataType : 'json',
-                    data : JSON.stringify(deleteData),
-                    success: function(data, status, xhr) {
+			url : apiHost + '/hugo/board/reply/delete',
+			method : 'POST',
+			contentType : 'application/json',
+			dataType : 'json',
+			data : JSON.stringify(deleteData),
+			success: function(data, status, xhr) {
 
-                        alert('success 진입');
+				alert('success 진입');
 
-                        //결과 코드 값 파싱
-                        var resultCode = data.resultCode;
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
 
-                        if (resultCode === 200) {
-                            //정상로직 시작
-                            alert('댓글이 삭제 되었습니다');
-                            location.reload();
+				if (resultCode === 200) {
+					//정상로직 시작
+					alert('댓글이 삭제 되었습니다');
+					location.reload();
 
-                        } else if (resultCode === 603) {
-                            alert('댓글이 존재하지 않습니다');
-                        } else if(resultCode === 710) {
-							alert('작성자 본인만 삭제가 가능합니다');
-						} else {
-                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.code === 500) {
-                            alert('서버오류');
-                        }
-                        if (xhr.code === 404) {
-                            alert('Not Found');
-                        }
-                    },
+				} else if (resultCode === 603) {
+					alert('댓글이 존재하지 않습니다');
+				} else if(resultCode === 710) {
+					alert('작성자 본인만 삭제가 가능합니다');
+				} else {
+					alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+				}
+			},
+			error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('서버오류');
+				}
+				if (xhr.code === 404) {
+					alert('Not Found');
+				}
+			},
         })
 	}
 
@@ -344,37 +351,37 @@
 		}
 
 		$.ajax({
-                    url : apiHost + '/hugo/board/delete',
-                    method : 'POST',
-                    contentType : 'application/json',
-                    dataType : 'json',
-                    data : JSON.stringify(deleteData),
-                    success: function(data, status, xhr) {
+			url : apiHost + '/hugo/board/delete',
+			method : 'POST',
+			contentType : 'application/json',
+			dataType : 'json',
+			data : JSON.stringify(deleteData),
+			success: function(data, status, xhr) {
 
-                        //결과 코드 값 파싱
-                        var resultCode = data.resultCode;
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
 
-                        if (resultCode === 200) {
-                            //정상로직 시작
-                            alert('게시글이 삭제되었습니다');
-                            location.href='../html/board-list.html';
+				if (resultCode === 200) {
+					//정상로직 시작
+					alert('게시글이 삭제되었습니다');
+					location.href='../html/board-list.html';
 
-                        } else if (resultCode === 602) {
-                            alert('게시글이 존재하지 않습니다');
-                        } else if(resultCode === 710) {
-							alert('작성자 본인만 삭제가 가능합니다');
-						} else {
-                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.code === 500) {
-                            alert('서버오류');
-                        }
-                        if (xhr.code === 404) {
-                            alert('Not Found');
-                        }
-                    },
+				} else if (resultCode === 602) {
+					alert('게시글이 존재하지 않습니다');
+				} else if(resultCode === 710) {
+					alert('작성자 본인만 삭제가 가능합니다');
+				} else {
+					alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+				}
+			},
+			error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('서버오류');
+				}
+				if (xhr.code === 404) {
+					alert('Not Found');
+				}
+			},
         })
 	}
 
