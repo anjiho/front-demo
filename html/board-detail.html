@@ -19,8 +19,7 @@
 	</table>
 	<div id="replyBox">
 		<div class="likeReply">
-			<!-- TODO 좋아요 클릭시 이벤트 만들기 -->
-			<span id="like" style="cursor:pointer"></span>
+			<span id="like" style="cursor:pointer" onclick="fn_like()"></span>
 			<span id="reply"></span>
 		</div>
 		<div>
@@ -386,6 +385,47 @@
 
 		}
 
+	}
+
+	// 좋아요 click
+	function fn_like() {
+
+		// TODO login id 받아오기 
+		likeData = {
+			"boardIdx" : boardIdx,
+			"id" : "string"
+		}
+
+		$.ajax({
+			url : apiHost + '/hugo/board/like',
+			method : 'POST',
+			contentType : 'application/json',
+			dataType : 'json',
+			data : JSON.stringify(likeData),
+			success: function(data, status, xhr) {
+
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+
+				if (resultCode === 200) {
+					//정상로직 시작
+					location.reload();
+
+				} else if(resultCode === 704) {
+					alert('로그인 되어있지 않습니다');
+				} else {
+					alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+				}
+			},
+			error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('서버오류');
+				}
+				if (xhr.code === 404) {
+					alert('Not Found');
+				}
+			},
+        })
 	}
 
 </script>
