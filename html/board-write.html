@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <form id="writeForm" method="post" enctype="multipart/form-data">
+    <!-- <form id="writeForm" method="post" enctype="multipart/form-data"> -->
 		<div id="eventWriterContainer">
 			<div class="eventWriter"><h1>게시판 글쓰기</h1></div>
 			<div id="selectBox">
@@ -43,13 +43,13 @@
 				<input name="ofile" id="ofile" type="file" class="fileBox"/>
 			</div>
 			<div class="eventWriteBtn">
-				<input type="submit" value="등록" class="eventBtn"/>
+				<input type="button" value="등록" class="eventBtn" id="saveBtn" onclick="saveBoard();"/>
 				<input type="reset" value="다시입력" class="eventBtn"/>
 				<input type="button" value="목록으로" class="eventBtn" onclick="location.href='./board-list.html'"/>
 			</div>
 			<div style="height: 90px;"></div>
 		</div>
-	</form>
+	<!-- </form> -->
 
 </body>
 
@@ -61,84 +61,104 @@
 
 <script>
 
-    $(document).ready(function(){
-        $('#writeForm').submit(function() {
+    //파일업로드 https://stackoverflow.com/questions/2320069/jquery-ajax-file-upload
 
-            var boarder = $('#boarderSelect').val();
-            var writeHeader = $('#writeHeaderSelect').val();
-            var eventPeriod = $('#eventPeriod').val();
-            var title = $('#title').val();
-            var content = $('#content').val();
-            var ofile = $('#ofile').val();
+    //파일업로드
+    function uploadFile() {
+        var formData = new FormData();
+        formData.append('file', $('#ofile')[0].files[0]);
+        console.log(formData);
+        
+        $.ajax({
+             url : apiHost + "/hugo/board/uploadFile"
+           , type : "POST"
+           , processData : false
+           , contentType : false
+           , data : formData
+           , success:function(response) {
+               alert("성공하였습니다.");
+               console.log(response);
+           }
+           ,error: function (jqXHR) { 
+               alert(jqXHR.responseText); 
+           }
+       });
+    }
 
-            if(boarder == "") {
-                alert("게시판을 선택해주세요");
-                $('#boarderSelect').focus();
-                return false;
+    function saveBoard() {
+        var boarder = $('#boarderSelect').val();
+        var writeHeader = $('#writeHeaderSelect').val();
+        var eventPeriod = $('#eventPeriod').val();
+        var title = $('#title').val();
+        var content = $('#content').val();
+        var ofile = $('#ofile').val();
+
+        if(boarder == "") {
+            alert("게시판을 선택해주세요");
+            $('#boarderSelect').focus();
+            return false;
+        }
+        else if(title == "") {
+            alert("제목을 입력해주세요");
+            $('#title').focus();
+            return false;
+        }
+        else {
+            var writeData = {
+                // TODO 로그인 아이디 받아와야함 
+                "id" : "string",
+                "boarder" : boarder,
+                "title" : title,
+                "content" : content,
+                "eventPeriod" : eventPeriod,
+                "ofile" : ofile,
+                "writeHeader" : writeHeader
             }
-            else if(title == "") {
-                alert("제목을 입력해주세요");
-                $('#title').focus();
-                return false;
-            }
-            else {
-                var writeData = {
-                    // TODO 로그인 아이디 받아와야함 
-                    "id" : "string",
-                    "boarder" : boarder,
-                    "title" : title,
-                    "content" : content,
-                    "eventPeriod" : eventPeriod,
-                    "ofile" : ofile,
-                    "writeHeader" : writeHeader
-                }
 
-                $.ajax({
-                    url : apiHost + '/hugo/board/write',
-                    method : 'POST',
-                    contentType : 'application/json',
-                    dataType : 'json',
-                    data : JSON.stringify(writeData),
-                    success: function(data, status, xhr) {
+            $.ajax({
+                url : apiHost + '/hugo/board/write',
+                method : 'POST',
+                contentType : 'application/json',
+                dataType : 'json',
+                data : JSON.stringify(writeData),
+                success: function(data, status, xhr) {
 
-                        // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
-                        alert('success 진입');
+                    // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
+                    alert('success 진입');
 
-                        //결과 코드 값 파싱
-                        var resultCode = data.resultCode;
-                        alert(resultCode);
+                    //결과 코드 값 파싱
+                    var resultCode = data.resultCode;
+                    alert(resultCode);
 
-                        //결과 idx 값 받아오기
-                        var boardIdx = data.result.boardIdx;
+                    //결과 idx 값 받아오기
+                    var boardIdx = data.result.boardIdx;
 
-                        if (resultCode === 200) {
-                            //정상로직 시작
-                            alert(boardIdx+'번 글이 작성 완료되었습니다');
+                    if (resultCode === 200) {
+                        //정상로직 시작
+                        alert(boardIdx+'번 글이 작성 완료되었습니다');
 
-                            location.href = '../html/board-list.html';
+                        location.href = '../html/board-list.html';
 
-                        } else if (resultCode === 600) {
-                            alert('제목을 입력해주세요');
-                            $('#title').focus();
+                    } else if (resultCode === 600) {
+                        alert('제목을 입력해주세요');
+                        $('#title').focus();
 
-                        } else {
-                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.code === 500) {
-                            alert('서버오류');
-                        }
-                        if (xhr.code === 404) {
-                            alert('Not Found');
-                        }
-                    },
-                })
-            }
-        })
-    })
-
-
+                    } else {
+                        alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.code === 500) {
+                        alert('서버오류');
+                    }
+                    if (xhr.code === 404) {
+                        alert('Not Found');
+                    }
+                },
+            })
+        }
+    }
+    
 </script>
 
 </html>

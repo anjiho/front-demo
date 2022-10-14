@@ -9,16 +9,16 @@
 <body>
 
     <div class="login-form">
-		<form name="frmLogin" id="frmLogin" method="post">
+		<!-- <form name="frmLogin" id="frmLogin" method="post"> -->
 		  <div class="login">
 				<input type="text" name="id" id="id" class="text-field" placeholder="아이디"><br/>
 				<input type="password" name="pwd" id="pwd" class="text-field" placeholder="비밀번호"><br/>
 				
 				<input type="checkbox" id="id_remember" name="id_remember" >아이디 저장<br/><br/>
 				
-				<input type="submit"  name="login" class="submit-btn" value="로그인"><br/>
+				<input type="submit"  name="login" id="login" class="submit-btn" value="로그인"><br/>
 		  </div>
-		</form>
+		<!-- </form> -->
 		<hr style="border: thin 2px #808080;">
 	     <!-- 수정해야함 -->
 	    <div class="nologin">
@@ -31,16 +31,35 @@
 		
 	</div>
 
+	<div class="logined-form" style="display: none;">
+		로그인이 되어있는 화면 입니다.
+		<input type="button" value="로그아웃" id="logoutBtn">
+	</div>
+
 </body>
 
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<!-- <script src="../js/login-after-common.js"></script>  -->
 
 <script>
-    $('#frmLogin').submit(function(e){
 
-        e.preventDefault();
+	// //로그인을 해야할때
+	// if (!sessionMemberId) {
+	// 	$('.login-form').show();
+	// 	$('.logined-form').hide();
+	// }
+	// //로그인이 된 상태
+	// if (sessionMemberId) {
+	// 	$('.login-form').hide();
+	// 	$('.logined-form').show();
+	// }
+
+    //$('#frmLogin').submit(function(e){
+
+       // e.preventDefault();
+	$('#login').click(function() {
 
         var id = $('#id').val();
         var pwd = $('#pwd').val();
@@ -67,6 +86,16 @@
 				if (resultCode === 200) {
 					//정상로직 시작
 					alert(nickName +' 님 로그인 성공했습니다');
+					
+					//sessionStorage.setItem('id', id);
+					//sessionStorage.setItem('nickName', nickName);
+					localStorage.setItem('id', id);
+					localStorage.setItem('nickName', nickName);
+					// var loginData = {
+					// 	'id':id,
+					// 	'nickName':nickName
+					// };
+					//setItemWithExpireTime('id', loginData, 90000);
 
                     // ****TODO****
                     // loacation.href 이동 위치 설정 (home 화면) - 홈화면 미제작으로 나중에 설정할것 
@@ -87,6 +116,14 @@
         })
     })
 
+	//localStorage 사용으로 변경 해보면 될듯?
+	$('#logoutBtn').click(function() {
+		sessionStorage.removeItem('id');
+		sessionStorage.removeItem('nickName');
+		location.reload();
+	});
+
+	
 </script>
 
 </html>
