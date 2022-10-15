@@ -58,6 +58,7 @@
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<script src="../js/login-after-common.js"></script>
 <script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
 
 <script>
@@ -78,7 +79,7 @@
        var getBoard = function() {
 		
 		$.ajax({
-			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+id+'',
+			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+loginMemberId+'',
 			method: 'GET',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -141,21 +142,21 @@
 							// 댓글 반복문 활용하여 삽입 
 							$.each(data.result.replyInfo, function (idx, reply) {
 
-							tags.push('<tr>');
-								tags.push('<td>' + reply.nickName + '</td>');
-								tags.push('<td>' + reply.writeDate + '</td>');
-								// TODO 신고하기 버튼 구현하기 
-								tags.push('<td>신고하기 버튼 </td>');
-								tags.push('<td><input type="hidden" value="'+reply.boardReplyIdx+'"/></td>');
+								tags.push('<tr>');
+									tags.push('<td>' + reply.nickName + '</td>');
+									tags.push('<td>' + reply.writeDate + '</td>');
+									// TODO 신고하기 버튼 구현하기 
+									tags.push('<td>신고하기 버튼 </td>');
+									tags.push('<td><input type="hidden" value="'+reply.boardReplyIdx+'"/></td>');
+									tags.push('</tr>');
+								tags.push('<tr>');
+									tags.push('<td colspan="4">'+reply.content+'</td>');
 								tags.push('</tr>');
-							tags.push('<tr>');
-								tags.push('<td colspan="4">'+reply.content+'</td>');
-							tags.push('</tr>');
-							tags.push('<tr>');
-								tags.push('<td colspan="4"><input type="button" id="deleteReply" value="삭제" onclick="fn_deleteReply()"/></td>');
-							tags.push('</tr>');
+								tags.push('<tr>');
+									tags.push('<td colspan="4"><input type="button" id="deleteReply" value="삭제" onclick="fn_deleteReply()"/></td>');
+								tags.push('</tr>');
 
-							$("#replyContent").html(tags);
+								$("#replyContent").html(tags);
 							});
 					}
 				} else if(resultCode === 550) {
@@ -176,12 +177,12 @@
 	var likeBoard = function() {
 
 		$.ajax({
-			url: apiHost + '/hugo/board/likeTable/id/'+id+'/boardIdx/'+boardIdx+'',
+			url: apiHost + '/hugo/board/likeTable/id/'+loginMemberId+'/boardIdx/'+boardIdx+'',
 			method: 'GET',
 			contentType: 'application/json',
 			data : {
 				"boardIdx" : boardIdx,
-				"id" : id
+				"id" : loginMemberId
 			},
 			dataType: 'json',
 			success: function(data, status, xhr) {
@@ -228,6 +229,7 @@
 		getBoard();
 		likeBoard();
 
+		$('#loginNickName').html(loginMemberNickName);
 	});
 	
 	$('#replyBtn').click(function() {
@@ -246,7 +248,7 @@
 		else {
 			var writeData = {
 				// TODO 로그인 닉네임 받아와야함 
-				"nickName" : "string",
+				"nickName" : loginMemberNickName,
 				"content" : content,
 				"boardIdx" : boardIdx
 			}
@@ -299,7 +301,7 @@
 	function fn_deleteReply()  {
 		var deleteData = {
 			// TODO 로그인 한 닉네임 받아와야함
-			"nickName" : "string",
+			"nickName" : loginMemberNickName,
 			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? 
 			"boardReplyIdx" : 5
 		}
@@ -401,7 +403,7 @@
 		// TODO login id 받아오기 
 		likeData = {
 			"boardIdx" : boardIdx,
-			"id" : "string"
+			"id" : loginMemberId
 		}
 
 		$.ajax({

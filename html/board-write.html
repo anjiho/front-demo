@@ -106,7 +106,7 @@
         else {
             var writeData = {
                 // TODO 로그인 아이디 받아와야함 
-                "id" : "string",
+                "id" : loginMemberId,
                 "boarder" : boarder,
                 "title" : title,
                 "content" : content,
@@ -157,7 +157,13 @@
                 },
             })
         }
+
+        if(ofile != null) {
+            uploadFile();
+        }
     }
+
+    
     
 </script>
 

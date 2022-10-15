@@ -153,14 +153,10 @@
 		})
 	}
 
-	$(document).ready(function() {
-		//let loginedData = getItemWithExpireTime('id');
-		//console.log('loginedData', loginedData);
-		let loginId = localStorage.getItem('id');
-		let loginNickName = localStorage.getItem('nickName');
+	$(document).ready(function() {		
+		$('#l_memberId').html(loginMemberId);
+		$('#l_memberNickName').html(loginMemberNickName);
 		
-		$('#l_memberId').html(loginId);
-		$('#l_memberNickName').html(loginNickName);
 
 		var listNumber = $('#listNumber').val();
 		getBoardList(0, listNumber);

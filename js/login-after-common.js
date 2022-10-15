@@ -10,3 +10,6 @@
 
 // console.log('sessionMemberId', sessionMemberId);
 // console.log('sessionNickName', sessionNickName);
+
+const loginMemberId = localStorage.getItem('id');
+const loginMemberNickName = localStorage.getItem('nickName');
