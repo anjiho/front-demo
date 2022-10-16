@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <form id="updateForm" method="post" enctype="multipart/form-data">
+    <!-- <form id="updateForm" method="post" enctype="multipart/form-data"> -->
 		<div id="eventWriterContainer">
 			<div class="eventWriter"><h1>게시판 글쓰기</h1></div>
 			<div id="selectBox">
@@ -43,13 +43,13 @@
 				<input name="ofile" id="ofile" type="file" class="fileBox"/>
 			</div>
 			<div class="eventWriteBtn">
-				<input type="submit" value="등록" class="eventBtn"/>
+				<input type="submit" value="등록" id="boardUpdate" class="eventBtn"/>
 				<input type="reset" value="다시입력" class="eventBtn"/>
 				<input type="button" value="목록으로" class="eventBtn" onclick="location.href='./board-list.html'"/>
 			</div>
 			<div style="height: 90px;"></div>
 		</div>
-	</form>
+	<!-- </form> -->
 
 </body>
 
@@ -62,82 +62,81 @@
 <script>
 
     $(document).ready(function(){
+        // ******** TODO board-detail 처럼 그냥 값 받아오고 input 안의 내용으로 집어 넣기 !!!
+    })
 
-        // TODO board-detail 에서 보낸온 값 받아서 각 value 에 넣어주기 
+    $('#boardUpdate').click(function() {
 
-        $('#updateForm').submit(function() {
+        var boarder = $('#boarderSelect').val();
+        var writeHeader = $('#writeHeaderSelect').val();
+        var eventPeriod = $('#eventPeriod').val();
+        var title = $('#title').val();
+        var content = $('#content').val();
+        var ofile = $('#ofile').val();
 
-            var boarder = $('#boarderSelect').val();
-            var writeHeader = $('#writeHeaderSelect').val();
-            var eventPeriod = $('#eventPeriod').val();
-            var title = $('#title').val();
-            var content = $('#content').val();
-            var ofile = $('#ofile').val();
-
-            if(boarder == "") {
-                alert("게시판을 선택해주세요");
-                $('#boarderSelect').focus();
-                return false;
+        if(boarder == "") {
+            alert("게시판을 선택해주세요");
+            $('#boarderSelect').focus();
+            return false;
+        }
+        else if(title == "") {
+            alert("제목을 입력해주세요");
+            $('#title').focus();
+            return false;
+        }
+        else {
+            var updateData = {
+                // TODO 로그인 아이디 받아와야함 
+                "id" : loginMemberId,
+                "boarder" : boarder,
+                "title" : title,
+                "content" : content,
+                "eventPeriod" : eventPeriod,
+                "ofile" : ofile,
+                "writeHeader" : writeHeader
             }
-            else if(title == "") {
-                alert("제목을 입력해주세요");
-                $('#title').focus();
-                return false;
-            }
-            else {
-                var updateData = {
-                    // TODO 로그인 아이디 받아와야함 
-                    "id" : "string",
-                    "boarder" : boarder,
-                    "title" : title,
-                    "content" : content,
-                    "eventPeriod" : eventPeriod,
-                    "ofile" : ofile,
-                    "writeHeader" : writeHeader
-                }
 
-                $.ajax({
-                    url : apiHost + '/hugo/board/update',
-                    method : 'POST',
-                    contentType : 'application/json',
-                    dataType : 'json',
-                    data : JSON.stringify(updateData),
-                    success: function(data, status, xhr) {
+            $.ajax({
+                url : apiHost + '/hugo/board/update',
+                method : 'POST',
+                contentType : 'application/json',
+                dataType : 'json',
+                data : JSON.stringify(updateData),
+                success: function(data, status, xhr) {
 
-                        // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
-                        alert('success 진입');
+                    // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
+                    alert('success 진입');
 
-                        //결과 코드 값 파싱
-                        var resultCode = data.resultCode;
-                        alert(resultCode);
+                    //결과 코드 값 파싱
+                    var resultCode = data.resultCode;
+                    alert(resultCode);
 
-                        //결과 idx 값 받아오기
-                        var boardIdx = data.result.boardIdx;
+                    //결과 idx 값 받아오기
+                    var boardIdx = data.result.boardIdx;
 
-                        if (resultCode === 200) {
-                            //정상로직 시작
-                            alert(boardIdx+'번 글이 수정 완료되었습니다');
-                            location.href = '../html/board-list.html';
+                    if (resultCode === 200) {
+                        //정상로직 시작
+                        alert(boardIdx+'번 글이 수정 완료되었습니다');
+                        location.href = '../html/board-list.html';
 
-                        } else if (resultCode === 600) {
-                            alert('제목을 입력해주세요');
-                            $('#title').focus();
+                    } else if (resultCode === 600) {
+                        alert('제목을 입력해주세요');
+                        $('#title').focus();
 
-                        } else {
-                            alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.code === 500) {
-                            alert('서버오류');
-                        }
-                        if (xhr.code === 404) {
-                            alert('Not Found');
-                        }
-                    },
-                })
-            }
-        })
+                    } else {
+                        alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.code === 500) {
+                        alert('서버오류');
+                    }
+                    if (xhr.code === 404) {
+                        alert('Not Found');
+                    }
+                },
+            })
+        }
     })
 
 

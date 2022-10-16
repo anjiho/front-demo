@@ -146,7 +146,7 @@
 									tags.push('<td>' + reply.nickName + '</td>');
 									tags.push('<td>' + reply.writeDate + '</td>');
 									// TODO 신고하기 버튼 구현하기 
-									tags.push('<td>신고하기 버튼 </td>');
+									tags.push('<td class="declarationBtn"><a decla-idx="'+reply.boardReplyIdx+'">신고하기 버튼 <a></td>');
 									tags.push('<td><input type="hidden" value="'+reply.boardReplyIdx+'"/></td>');
 									tags.push('</tr>');
 								tags.push('<tr>');
@@ -217,7 +217,7 @@
                     alert('좋아요 로드시 오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
                 }
   			},
-			  error: function(xhr, status, error) {
+			error: function(xhr, status, error) {
 				if (xhr.code === 500) {
 					alert('500');
 				}
@@ -300,9 +300,8 @@
 	// 댓글 삭제 버튼 
 	function fn_deleteReply()  {
 		var deleteData = {
-			// TODO 로그인 한 닉네임 받아와야함
 			"nickName" : loginMemberNickName,
-			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? 
+			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? << 질문
 			"boardReplyIdx" : 5
 		}
 
@@ -390,17 +389,13 @@
 
 	// 게시글 수정
 	function fn_boardUpdate() {
-		
-		updateData = {
-
-		}
-
+		// ******* 값이 잘 넘어가는지 확인 할 것!!! *******
+		location.href = "../html/board-update.html?boardIdx="+boardIdx+"&memberId="+loginMemberId;
 	}
 
 	// 좋아요 click
 	function fn_like() {
 
-		// TODO login id 받아오기 
 		likeData = {
 			"boardIdx" : boardIdx,
 			"id" : loginMemberId

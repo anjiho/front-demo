@@ -138,6 +138,12 @@
             var callNum = $('#callNum').val();
             var email = $('#email').val();
 
+            if(id == "") {
+                alert("아이디를 입력후 중복 확인해주세요");
+                $('#id').focus();
+                return false;
+            }
+
             if(pwd == "") {
                 alert("비밀번호 입력해주세요");
                 $('#pwd').focus();
