@@ -147,7 +147,7 @@
 									tags.push('<td>' + reply.writeDate + '</td>');
 									// TODO 신고하기 버튼 구현하기 
 									tags.push('<td class="declarationBtn"><a decla-idx="'+reply.boardReplyIdx+'">신고하기 버튼 <a></td>');
-									tags.push('<td><input type="hidden" value="'+reply.boardReplyIdx+'"/></td>');
+									tags.push('<td><input type="hidden" id="boardReplyIdx" value="'+reply.boardReplyIdx+'"/></td>');
 									tags.push('</tr>');
 								tags.push('<tr>');
 									tags.push('<td colspan="4">'+reply.content+'</td>');
@@ -299,10 +299,12 @@
 
 	// 댓글 삭제 버튼 
 	function fn_deleteReply()  {
+
+		var boardReplyIdx = $('#boardReplyIdx').val();
 		var deleteData = {
 			"nickName" : loginMemberNickName,
 			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? << 질문
-			"boardReplyIdx" : 5
+			"boardReplyIdx" : boardReplyIdx
 		}
 
 		$.ajax({
