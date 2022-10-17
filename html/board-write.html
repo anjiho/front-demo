@@ -65,9 +65,10 @@
     //파일업로드 https://stackoverflow.com/questions/2320069/jquery-ajax-file-upload
 
     //파일업로드
-    function uploadFile() {
+    function uploadFile(boardIdx) {
         var formData = new FormData();
         formData.append('file', $('#ofile')[0].files[0]);
+        formData.append('boardIdx',boardIdx);
         
         $.ajax({
              url : apiHost + "/hugo/board/uploadFile"
@@ -128,6 +129,9 @@
                     var boardIdx = data.result.boardIdx;
 
                     if (resultCode === 200) {
+                        if(ofile != null) {
+                            uploadFile(boardIdx);
+                        }
                         //정상로직 시작
                         alert(boardIdx+'번 글이 작성 완료되었습니다');
 
@@ -152,9 +156,9 @@
             })
         }
 
-        if(ofile != null) {
-            uploadFile();
-        }
+        // if(ofile != null) {
+        //     uploadFile();
+        // }
     }
 
     
