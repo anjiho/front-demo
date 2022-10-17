@@ -56,6 +56,7 @@
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<script src="../js/login-after-common.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script> 
 <script src="../js/jquery.twbsPagination.js"></script>
 
@@ -67,7 +68,6 @@
     function uploadFile() {
         var formData = new FormData();
         formData.append('file', $('#ofile')[0].files[0]);
-        console.log(formData);
         
         $.ajax({
              url : apiHost + "/hugo/board/uploadFile"
@@ -105,7 +105,6 @@
         }
         else {
             var writeData = {
-                // TODO 로그인 아이디 받아와야함 
                 "id" : loginMemberId,
                 "boarder" : boarder,
                 "title" : title,
@@ -122,13 +121,8 @@
                 dataType : 'json',
                 data : JSON.stringify(writeData),
                 success: function(data, status, xhr) {
-
-                    // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
-                    alert('success 진입');
-
                     //결과 코드 값 파싱
                     var resultCode = data.resultCode;
-                    alert(resultCode);
 
                     //결과 idx 값 받아오기
                     var boardIdx = data.result.boardIdx;

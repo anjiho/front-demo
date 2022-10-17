@@ -16,6 +16,7 @@
 			<th class="DTLHeader" width="20%">이벤트기간</th>
 		</thead>
         <tbody id="boardContent"></tbody>
+
 		<tr>
 			<td><input type="hidden" id="boardWriterId" name="boardWriterId" value=""/></td>
 		</tr>
@@ -34,10 +35,8 @@
 			</div>
 		</div>
 		<div>
-			<!-- <form id="replyForm" method="POST"> -->
 				<table>
 					<tr>
-						<!-- TODO 로그인 되어있을때 loginNickName 나올 수 있게, 로그인이 아닐 시 guest 호출 guest 일때는 댓글 작성 불가  -->
 						<td id="loginNickName"></td>
 						<td>
 							<textarea id="replyWriteContent"></textarea>
@@ -47,7 +46,6 @@
 						</td>
 					</tr>
 				</table>
-			<!-- </form> -->
 		</div>
 		<div>
 			<input type="button" id="boardDetailUpdate" value="수정" onclick="fn_boardUpdate()"/>
@@ -67,6 +65,37 @@
 <script>
 	//파일 다운로드 예제 링크 
 	//https://jaimemin.tistory.com/2086
+
+	function fileDownload(filename) {
+		$.ajax({
+			// TODO FileCode 를 받아야하는데 어떻게.. 받는지 .. 
+			url: apiHost + "/hugo/board/downloadFile/",
+			method: "GET",
+			data: {
+				fileName: filename
+			},
+			contentType: "application/json",
+			dataType: "json",
+			success: function (result) {
+				if (result == false) {
+					alert("파일이 존재하지 않습니다.");
+
+					return;
+				}
+
+				var downloadLink = document.createElement("a");
+				downloadLink.href = '/download?filename=' + filename;
+				downloadLink.download = "data.csv";
+
+				document.body.appendChild(downloadLink);
+				downloadLink.click();
+				document.body.removeChild(downloadLink);
+			},
+			error: function (xhr, status, error) {
+				alert(xhr.status + " : 서버와의 통신이 원활하지 않습니다. 다시 시도해 주십시오.");
+			}
+		});
+	}
 
 	// 파라미터값 가져오기 
 	function getParameter(name) {
@@ -128,7 +157,13 @@
 								str += '<td colspan="5">'+boardData.content+'</td>';
 							str += '</tr>';
 
-							// TODO 이미지 받아서 이미지 추가해야함 
+							if(boardData.ofile != null || boardData.ofile != "") {
+								str += '<tr>';
+									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload('+boardData.ofile+')">첨부파일 다운받기</td>';
+								str += '</tr>';
+							}
+							
+							// TODO 이미지 받아서 이미지 추가해야함 filecode - filename 으로 저장됨 
 
 							// 댓글 총 갯수 추가
 							if(replyInfo == null) {
@@ -233,14 +268,17 @@
 		getBoard();
 		likeBoard();
 
-		$('#loginNickName').html(loginMemberNickName);
+		if(loginMemberNickName == null) {
+			$('#loginNickName').html('guest');
+		} else {
+			$('#loginNickName').html(loginMemberNickName);
+		}
 	});
 	
 	$('#replyBtn').click(function() {
-		var nickName = $('#loginNickName').val();
 		var content = $('#replyWriteContent').val();
 
-		if(nickName == "guest") {
+		if(loginMemberNickName == '' || loginMemberNickName == null) {
 			alert("로그인한 사용자만이 댓글을 작성할 수 있습니다.");
 			return false;
 		}
@@ -304,47 +342,56 @@
 	// 댓글 삭제 버튼 
 	function fn_deleteReply()  {
 
-		var boardReplyIdx = $('#boardReplyIdx').val();
-		var deleteData = {
-			"nickName" : loginMemberNickName,
-			"boardReplyIdx" : boardReplyIdx
+		confirm('삭제하시겠습니까?');
+
+		if(loginMemberId == null || loginMemberId == "") {
+			alert('로그인한 사용자만이 삭제할 수 있습니다.');
+			location.href = "../html/login.html";
+		} else {
+			var boardReplyIdx = $('#boardReplyIdx').val();
+			var deleteData = {
+				"nickName" : loginMemberNickName,
+				"boardReplyIdx" : boardReplyIdx
+			}
+
+			$.ajax({
+				url : apiHost + '/hugo/board/reply/delete',
+				method : 'POST',
+				contentType : 'application/json',
+				dataType : 'json',
+				data : JSON.stringify(deleteData),
+				success: function(data, status, xhr) {
+
+					alert('success 진입');
+
+					//결과 코드 값 파싱
+					var resultCode = data.resultCode;
+
+					if (resultCode === 200) {
+						//정상로직 시작
+						alert('댓글이 삭제 되었습니다');
+						location.reload();
+
+					} else if (resultCode === 603) {
+						alert('댓글이 존재하지 않습니다');
+					} else if(resultCode === 710) {
+						alert('작성자 본인만 삭제가 가능합니다');
+					} else {
+						alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+					}
+				},
+				error: function(xhr, status, error) {
+					if (xhr.code === 500) {
+						alert('서버오류');
+					}
+					if (xhr.code === 404) {
+						alert('Not Found');
+					}
+				},
+			})
 		}
 
-		$.ajax({
-			url : apiHost + '/hugo/board/reply/delete',
-			method : 'POST',
-			contentType : 'application/json',
-			dataType : 'json',
-			data : JSON.stringify(deleteData),
-			success: function(data, status, xhr) {
-
-				alert('success 진입');
-
-				//결과 코드 값 파싱
-				var resultCode = data.resultCode;
-
-				if (resultCode === 200) {
-					//정상로직 시작
-					alert('댓글이 삭제 되었습니다');
-					location.reload();
-
-				} else if (resultCode === 603) {
-					alert('댓글이 존재하지 않습니다');
-				} else if(resultCode === 710) {
-					alert('작성자 본인만 삭제가 가능합니다');
-				} else {
-					alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-				}
-			},
-			error: function(xhr, status, error) {
-				if (xhr.code === 500) {
-					alert('서버오류');
-				}
-				if (xhr.code === 404) {
-					alert('Not Found');
-				}
-			},
-        })
+		
 	}
 
 	// 게시글 삭제
@@ -405,41 +452,47 @@
 	// 좋아요 click
 	function fn_like() {
 
-		likeData = {
-			"boardIdx" : boardIdx,
-			"id" : loginMemberId
+		if(loginMemberId == null || loginMemberId == "") {
+			alert('로그인한 사용자만이 좋아요를 입력할 수 있습니다.');
+			location.href = "../html/login.html";
+		} else {
+
+			likeData = {
+				"boardIdx" : boardIdx,
+				"id" : loginMemberId
+			}
+
+			$.ajax({
+				url : apiHost + '/hugo/board/like',
+				method : 'POST',
+				contentType : 'application/json',
+				dataType : 'json',
+				data : JSON.stringify(likeData),
+				success: function(data, status, xhr) {
+
+					//결과 코드 값 파싱
+					var resultCode = data.resultCode;
+
+					if (resultCode === 200) {
+						//정상로직 시작
+						location.reload();
+
+					} else if(resultCode === 704) {
+						alert('로그인 되어있지 않습니다');
+					} else {
+						alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+					}
+				},
+				error: function(xhr, status, error) {
+					if (xhr.code === 500) {
+						alert('서버오류');
+					}
+					if (xhr.code === 404) {
+						alert('Not Found');
+					}
+				},
+			})
 		}
-
-		$.ajax({
-			url : apiHost + '/hugo/board/like',
-			method : 'POST',
-			contentType : 'application/json',
-			dataType : 'json',
-			data : JSON.stringify(likeData),
-			success: function(data, status, xhr) {
-
-				//결과 코드 값 파싱
-				var resultCode = data.resultCode;
-
-				if (resultCode === 200) {
-					//정상로직 시작
-					location.reload();
-
-				} else if(resultCode === 704) {
-					alert('로그인 되어있지 않습니다');
-				} else {
-					alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
-				}
-			},
-			error: function(xhr, status, error) {
-				if (xhr.code === 500) {
-					alert('서버오류');
-				}
-				if (xhr.code === 404) {
-					alert('Not Found');
-				}
-			},
-        })
 	}
 
 </script>
