@@ -157,7 +157,9 @@
 								str += '<td colspan="5">'+boardData.content+'</td>';
 							str += '</tr>';
 
-							if(boardData.ofile != null || boardData.ofile != "") {
+							console.log("ofile >> ", boardData.ofile);
+							console.log("ofile type >> ", typeof boardData.ofile);
+							if(boardData.ofile) {
 								str += '<tr>';
 									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload('+boardData.ofile+')">첨부파일 다운받기</td>';
 								str += '</tr>';
