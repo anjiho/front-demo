@@ -31,10 +31,10 @@
 				</select>
 			</div>
 			<div id="eventPeriod">
-				<input type="text" id="eventPeriod" name="event_period" placeholder="&nbsp;xxxx.xx.xx~xxxx.xx.xx" style="width: 75%; height:30px; font-size:20px;"/>
+				<input type="text" value="" id="eventPeriod" name="eventPeriod" placeholder="&nbsp;xxxx.xx.xx~xxxx.xx.xx" style="width: 75%; height:30px; font-size:20px;"/>
 			</div>
 			<div id="eventTitle">
-				<input type="text" id="title" name="title" placeholder="&nbsp;제목을 입력하세요." style="width :100%; height:30px; font-size:20px; float:left;"/>
+				<input type="text" value="" id="title" name="title" placeholder="&nbsp;제목을 입력하세요." style="width :100%; height:30px; font-size:20px; float:left;"/>
 			</div>
 			<div id="eventContent">
 				<textarea name="content" id="content" placeholder="&nbsp;내용을 입력하세요." style="width:100%; height:500px; font-size:15px;"></textarea>
@@ -56,13 +56,67 @@
 <script src="../js/jquery.js"></script> 
 <script src="../js/jquery.min.js"></script> 
 <script src="../js/common.js"></script> 
+<script src="../js/login-after-common.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script> 
 <script src="../js/jquery.twbsPagination.js"></script>
 
 <script>
 
+    // 파라미터값 가져오기 
+	function getParameter(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+    var boardIdx = getParameter("boardIdx");
+
+    // board 정보 가져오기 
+    var getBoard = function() {
+		
+		$.ajax({
+			url: apiHost + '/hugo/board/detail/boardIdx/'+boardIdx+'/id/'+loginMemberId,
+			method: 'GET',
+			contentType: 'application/json',
+			dataType: 'json',
+			data : {
+				"boardIdx" : boardIdx,
+				"id" : loginMemberId
+			},
+			success: function(data, status, xhr) {
+				//결과 코드 값 파싱
+				var resultCode = data.resultCode;
+				
+				if (resultCode === 200) {
+					//정상로직 시작
+
+                    var board = data.result;
+
+					if (data != null) {
+                        // 게시판 선택 
+                        $('#boarderSelect').val(board.boarder).prop("selected",true);
+                        $('#writeHeaderSelect').val(board.writeHeader).prop("selected",true);
+                        $('input[name=eventPeriod]').attr('value',board.eventPeriod);
+                        $('input[name=title]').attr('value',board.title);
+                        $('#content').val(board.content);
+
+					}
+				} else if(resultCode === 550) {
+                    alert("게시글이 없습니다");
+				} else {
+                    alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
+                }
+  			},
+			  error: function(xhr, status, error) {
+				if (xhr.code === 500) {
+					alert('500');
+				}
+			},
+		})
+	}
+
     $(document).ready(function(){
-        // ******** TODO board-detail 처럼 그냥 값 받아오고 input 안의 내용으로 집어 넣기 !!!
+        getBoard();
     })
 
     $('#boardUpdate').click(function() {
@@ -87,6 +141,7 @@
         else {
             var updateData = {
                 // TODO 로그인 아이디 받아와야함 
+                "boardIdx" : boardIdx,
                 "id" : loginMemberId,
                 "boarder" : boarder,
                 "title" : title,
@@ -123,7 +178,9 @@
                         alert('제목을 입력해주세요');
                         $('#title').focus();
 
-                    } else {
+                    } else if (resultCode === 602) {
+                        alert('해당 게시글은 존재하지 않습니다.');
+                    }else {
                         alert('오류가 발생했습니다. 지속적인 문제 발생시 관리자에게 문의해주세요');
                     }
                 },

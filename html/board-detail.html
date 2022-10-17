@@ -16,6 +16,9 @@
 			<th class="DTLHeader" width="20%">이벤트기간</th>
 		</thead>
         <tbody id="boardContent"></tbody>
+		<tr>
+			<td><input type="hidden" id="boardWriterId" name="boardWriterId" value=""/></td>
+		</tr>
 	</table>
 	<div id="replyBox">
 		<div class="likeReply">
@@ -107,10 +110,11 @@
 						var boardData = data.result;
 						replyInfo = data.result.replyInfo;
 
-						// TODO --  Object object 로 저장되는데 Array 를 그대로 가져올 방법!? 
 						console.log('replyInfo ::'+replyInfo);
 						console.log('replyCount :: '+replyCount);
 						console.log('data.result :::'+boardData);
+
+						$('input[name=boardWriterId]').attr('value',boardData.id);
 
 							str += '<tr>';
 								str += '<td>' + boardData.boardIdx + '</td>';
@@ -303,7 +307,6 @@
 		var boardReplyIdx = $('#boardReplyIdx').val();
 		var deleteData = {
 			"nickName" : loginMemberNickName,
-			// TODO 클릭한 boardReplyIdx 를 가져오는 방법..? << 질문
 			"boardReplyIdx" : boardReplyIdx
 		}
 
@@ -391,8 +394,12 @@
 
 	// 게시글 수정
 	function fn_boardUpdate() {
-		// ******* 값이 잘 넘어가는지 확인 할 것!!! *******
-		location.href = "../html/board-update.html?boardIdx="+boardIdx+"&memberId="+loginMemberId;
+		var boardId = $('#boardWriterId').val();
+		if(boardId == loginMemberId) {
+			location.href = "../html/board-update.html?boardIdx="+boardIdx
+		} else {
+			alert('작성자 본인만 수정 가능합니다.');
+		}
 	}
 
 	// 좋아요 click
