@@ -79,7 +79,6 @@
 			success: function(data, status, xhr) {
 				//결과 코드 값 파싱
 				var resultCode = data.resultCode;
-				//alert('resultCode::'+resultCode);
 				
 				if (resultCode === 200) {
 
@@ -96,12 +95,9 @@
 					
 					if (data != null) {
 						$.each(data.result.boardInfo, function (idx, board) {
-                            // console.log(board.title);
 
 							tags.push("<tr>");
 							tags.push('<td>' + board.rowNum + '</td>');
-							// id 를 로그인 한 사람의 id로 받아야 함 
-							// 해당 값의 제이슨이 나오는데 boardDTL.html 로 get형식의 boardIdx와 로그인 memberId를 넘겨서 받는 방법..? 
 							tags.push('<td class="tableTd"><a data-idx='+ board.boardIdx +' data-memberid='+ loginMemberId +'>' + board.title + '</a></td>');
 							tags.push('<td>' + board.id + '</td>');
                             tags.push('<td>' + board.ofile + '</td>');
@@ -166,9 +162,6 @@
 
 		// //제일 처음불러올때는 고정 값
 		
-
-		
-		// // TODO undifined 나옴.. 
 		// alert('totalBoardCount ::'+$('#totalBoardCount').val());
 		
 		// var totalPageNum;

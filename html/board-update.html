@@ -140,7 +140,6 @@
         }
         else {
             var updateData = {
-                // TODO 로그인 아이디 받아와야함 
                 "boardIdx" : boardIdx,
                 "id" : loginMemberId,
                 "boarder" : boarder,
@@ -159,12 +158,8 @@
                 data : JSON.stringify(updateData),
                 success: function(data, status, xhr) {
 
-                    // TODO - 여기부터 로직 안돌아감 alert 창도 안뜸 DB에 등록은 정상적으로 이뤄짐 에러코드도 안나옴.. 
-                    alert('success 진입');
-
                     //결과 코드 값 파싱
                     var resultCode = data.resultCode;
-                    alert(resultCode);
 
                     //결과 idx 값 받아오기
                     var boardIdx = data.result.boardIdx;

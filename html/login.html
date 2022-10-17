@@ -81,7 +81,6 @@
 				var resultCode = data.resultCode;
                 // 결과 닉네임 가져오기 
                 var nickName = data.result.NickName;
-                alert(resultCode);
 				
 				if (resultCode === 200) {
 					//정상로직 시작
@@ -91,8 +90,6 @@
 					localStorage.setItem('id', id);
 					localStorage.setItem('nickName', nickName);
 
-                    // ****TODO****
-                    // loacation.href 이동 위치 설정 (home 화면) - 홈화면 미제작으로 나중에 설정할것 
                     location.href = '../html/board-list.html';
 				} else {
 					//에러처리 

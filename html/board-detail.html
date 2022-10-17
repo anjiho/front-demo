@@ -289,7 +289,6 @@
 		}
 		else {
 			var writeData = {
-				// TODO 로그인 닉네임 받아와야함 
 				"nickName" : loginMemberNickName,
 				"content" : content,
 				"boardIdx" : boardIdx
@@ -303,12 +302,8 @@
 				data : JSON.stringify(writeData),
 				success: function(data, status, xhr) {
 
-					// TODO - alert 창이 안뜸 DB에 등록은 정상적으로 이뤄지며 댓글은 입력이됨.. 
-					alert('success 진입');
-
 					//결과 코드 값 파싱
 					var resultCode = data.resultCode;
-					alert(resultCode);
 
 					//결과 idx 값 받아오기
 					var boardReplyIdx = data.result.boardReplyIdx;
