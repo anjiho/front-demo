@@ -67,7 +67,7 @@
 	//https://jaimemin.tistory.com/2086
 	var fileCode;
 
-	function fileDownload(/*filename*/) {
+	function fileDownload(filename) {
 		console.log('fileCode ::: ',fileCode);
 		$.ajax({
 			// TODO FileCode 를 받아야하는데 어떻게.. 받는지 .. 
@@ -77,16 +77,17 @@
 			// 	fileName: filename
 			// },
 			contentType: "application/octect-stream",
-			dataType: "json",
+			// dataType: "json",
 			success: function (result) {
 				if (result == false) {
 					alert("파일이 존재하지 않습니다.");
 					return;
 				}
+				alert('파일다운 성공!');
 
 				var downloadLink = document.createElement("a");
-				downloadLink.href = '/download?filename=' + filename;
-				downloadLink.download = "data.csv";
+				downloadLink.href = apiHost+"/hugo/board/downloadFile/"+fileCode;
+				downloadLink.download = filename;
 
 				document.body.appendChild(downloadLink);
 				downloadLink.click();
@@ -169,7 +170,7 @@
 								// 	str += '<img src="/Users/hwh/Boot_study/hello-spring /Files-Upload/'+boardData.fileCode+'-'+fileName+'" />'
 								// str += '</tr>';
 								str += '<tr>';
-									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload()">첨부파일 다운받기</td>';
+									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload(\''+fileName+'\')">첨부파일 다운받기</td>';
 									//'+fileName+'
 								str += '</tr>';
 							}
