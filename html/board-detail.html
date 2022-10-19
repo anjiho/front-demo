@@ -65,21 +65,22 @@
 <script>
 	//파일 다운로드 예제 링크 
 	//https://jaimemin.tistory.com/2086
+	var fileCode;
 
-	function fileDownload(filename) {
+	function fileDownload(/*filename*/) {
+		console.log('fileCode ::: ',fileCode);
 		$.ajax({
 			// TODO FileCode 를 받아야하는데 어떻게.. 받는지 .. 
-			url: apiHost + "/hugo/board/downloadFile/",
+			url: apiHost + "/hugo/board/downloadFile/"+fileCode,
 			method: "GET",
-			data: {
-				fileName: filename
-			},
-			contentType: "application/json",
+			// data: {
+			// 	fileName: filename
+			// },
+			contentType: "application/octect-stream",
 			dataType: "json",
 			success: function (result) {
 				if (result == false) {
 					alert("파일이 존재하지 않습니다.");
-
 					return;
 				}
 
@@ -157,11 +158,19 @@
 								str += '<td colspan="5">'+boardData.content+'</td>';
 							str += '</tr>';
 
-							console.log("ofile >> ", boardData.ofile);
-							console.log("ofile type >> ", typeof boardData.ofile);
-							if(boardData.ofile) {
+							if(boardData.ofile != null || boardData.ofile != "") {
+
+								fileCode = boardData.fileCode;
+
+								var oFileName = boardData.ofile;
+								var fileName = oFileName.slice(12,);
+								console.log('fileName ::',fileName);
+								// str += '<tr>';
+								// 	str += '<img src="/Users/hwh/Boot_study/hello-spring /Files-Upload/'+boardData.fileCode+'-'+fileName+'" />'
+								// str += '</tr>';
 								str += '<tr>';
-									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload('+boardData.ofile+')">첨부파일 다운받기</td>';
+									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload()">첨부파일 다운받기</td>';
+									//'+fileName+'
 								str += '</tr>';
 							}
 							
