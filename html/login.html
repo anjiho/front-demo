@@ -31,7 +31,6 @@
 	      	<a class="searchbtn2" onClick="window.open('searchPwForm.do')">&nbsp;&nbsp;비밀번호 찾기</a>
 			<!-- <input type="button" name="findID/PW" class="submit-btn-small" value="ID/PW찾기" > -->
         </div>
-		
 	</div>
 
 	<div class="logined-form" style="display: none;">
@@ -67,6 +66,7 @@
 						localStorage.setItem('id', kakao_account.email);
 						localStorage.setItem('nickName',kakao_account.profile.nickname);
 
+						location.href='http://localhost/front-demo/html/board-list.html';
 					}
 				});
 			}
