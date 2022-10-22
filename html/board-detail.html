@@ -16,11 +16,15 @@
 			<th class="DTLHeader" width="20%">이벤트기간</th>
 		</thead>
         <tbody id="boardContent"></tbody>
+		
 
 		<tr>
 			<td><input type="hidden" id="boardWriterId" name="boardWriterId" value=""/></td>
 		</tr>
 	</table>
+	<div>
+		<img src="" alt="이미지 보여주기" style="max-height : 300px; max-width : 350px;" id="imgShow"/>
+	</div>
 	<div id="replyBox">
 		<div class="likeReply">
 			<span id="like" style="cursor:pointer" onclick="javascript:fn_like();"></span>
@@ -166,13 +170,13 @@
 								var oFileName = boardData.ofile;
 								var fileName = oFileName.slice(12,);
 								console.log('fileName ::',fileName);
-								// str += '<tr>';
-								// 	str += '<img src="/Users/hwh/Boot_study/hello-spring /Files-Upload/'+boardData.fileCode+'-'+fileName+'" />'
-								// str += '</tr>';
 								str += '<tr>';
+									// str += '<img src="../../front-demo/img/upload-files/'+boardData.fileCode+'-'+fileName+'" alt="이미지 다운로드 실패"/>?'
 									str += '<td id="fileDownload" name="fileDownload" onclick="fileDownload(\''+fileName+'\')">첨부파일 다운받기</td>';
 									//'+fileName+'
 								str += '</tr>';
+
+								$('#imgShow').attr('src','../../front-demo/img/upload-files/'+boardData.fileCode+'-'+fileName);
 							}
 							
 							// TODO 이미지 받아서 이미지 추가해야함 filecode - filename 으로 저장됨 
@@ -368,9 +372,6 @@
 				dataType : 'json',
 				data : JSON.stringify(deleteData),
 				success: function(data, status, xhr) {
-
-					alert('success 진입');
-
 					//결과 코드 값 파싱
 					var resultCode = data.resultCode;
 
@@ -408,7 +409,7 @@
 
 		deleteData = {
 			"boardIdx" : boardIdx,
-			"id" : id
+			"id" : loginMemberId
 		}
 
 		$.ajax({

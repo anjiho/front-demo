@@ -74,7 +74,7 @@
 				"startPage" : startPage,
 				"listNumber" : listNumber
 			},
-			// async:false,
+			async:false,
 			dataType: 'json',
 			success: function(data, status, xhr) {
 				//결과 코드 값 파싱
@@ -108,33 +108,33 @@
 							$("#boardDiv").html(tags);
 						});
 					}
-					var listNumber = $('#listNumber').val();
+					// var listNumber = $('#listNumber').val();
 
-					if(totalBoardCount == 0 || totalBoardCount == null) {
-						alert('게시글이 없습니다');
-						totalPageNum = 1;
-					} else {
-						if(totalBoardCount / listNumber == 0) {
-							totalPageNum = 1;
-						} else {
-							totalPageNum = Math.ceil((totalBoardCount/listNumber));
-						}
-					}
+					// if(totalBoardCount == 0 || totalBoardCount == null) {
+					// 	alert('게시글이 없습니다');
+					// 	totalPageNum = 1;
+					// } else {
+					// 	if(totalBoardCount / listNumber == 0) {
+					// 		totalPageNum = 1;
+					// 	} else {
+					// 		totalPageNum = Math.ceil((totalBoardCount/listNumber));
+					// 	}
+					// }
 
-					$('#pagination').twbsPagination({
-						totalPages: [[totalPageNum]], // 전체 페이지
-						startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
-						visiblePages: 5, // 최대로 보여줄 페이지
-						prev: "‹", // Previous Button Label
-						next: "›", // Next Button Label
-						first: '«', // First Button Label
-						last: '»', // Last Button Label
-						onPageClick: function (event, page) { // Page Click event
-							console.info("current page : " + page);
-						}
-					}).on('page', function (event, page) {
-						getBoardList(page-1, listNumber);
-					});
+					// $('#pagination').twbsPagination({
+					// 	totalPages: [[totalPageNum]], // 전체 페이지
+					// 	startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
+					// 	visiblePages: 5, // 최대로 보여줄 페이지
+					// 	prev: "‹", // Previous Button Label
+					// 	next: "›", // Next Button Label
+					// 	first: '«', // First Button Label
+					// 	last: '»', // Last Button Label
+					// 	onPageClick: function (event, page) { // Page Click event
+					// 		console.info("current page : " + page);
+					// 	}
+					// }).on('page', function (event, page) {
+					// 	getBoardList(page-1, listNumber);
+					// });
 				} else if(resultCode === 550) {
                     alert("게시글이 없습니다");
 				} else {
@@ -164,39 +164,39 @@
 		
 		// alert('totalBoardCount ::'+$('#totalBoardCount').val());
 		
-		// var totalPageNum;
+		var totalPageNum;
 
-		// if(totalBoardCount == 0 || totalBoardCount == null) {
-		// 	alert('게시글이 없습니다');
-		// 	totalPageNum = 1;
-		// } else {
-		// 		if(totalBoardCount / listNumber == 0) {
-		// 			alert('게시글이 없습니다');
-		// 			totalPageNum = 1;
-		// 		} else {
-		// 			totalPageNum = Math.ceil((totalBoardCount/listNumber));
-		// 		}
-		// }
+		if(totalBoardCount == 0 || totalBoardCount == null) {
+			alert('게시글이 없습니다');
+			totalPageNum = 1;
+		} else {
+				if(totalBoardCount / listNumber == 0) {
+					alert('게시글이 없습니다');
+					totalPageNum = 1;
+				} else {
+					totalPageNum = Math.ceil((totalBoardCount/listNumber));
+				}
+		}
 		
-		// alert('totalPageNum ::'+totalPageNum);
+		console.log('totalPageNum ::'+totalPageNum);
 
-		//페이징 관련 스크립트 ( 참고 URL >> https://data-make.tistory.com/670 )
-		// window.pagObj = $('#pagination').twbsPagination({
-		// 	totalPages: [[totalPageNum]], // 전체 페이지
-		// 	startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
-		// 	visiblePages: 5, // 최대로 보여줄 페이지
-		// 	prev: "‹", // Previous Button Label
-		// 	next: "›", // Next Button Label
-		// 	first: '«', // First Button Label
-		// 	last: '»', // Last Button Label
-		// 	onPageClick: function (event, page) { // Page Click event
-		// 		console.info("current page : " + page);
-		// 	}
-		// }).on('page', function (event, page) {
-		// 	// alert('clicked page :: ' + page);
-		// 	// alert('totalBoardCount :: ' +  totalBoardCount);
-		// 	getBoardList(page-1, listNumber);
-		// });
+		// 페이징 관련 스크립트 ( 참고 URL >> https://data-make.tistory.com/670 )
+		window.pagObj = $('#pagination').twbsPagination({
+			totalPages: [[totalPageNum]], // 전체 페이지
+			startPage: parseInt([[0]] + 1), // 시작(현재) 페이지
+			visiblePages: 5, // 최대로 보여줄 페이지
+			prev: "‹", // Previous Button Label
+			next: "›", // Next Button Label
+			first: '«', // First Button Label
+			last: '»', // Last Button Label
+			onPageClick: function (event, page) { // Page Click event
+				console.info("current page : " + page);
+			}
+		}).on('page', function (event, page) {
+			// alert('clicked page :: ' + page);
+			// alert('totalBoardCount :: ' +  totalBoardCount);
+			getBoardList(page-1, listNumber);
+		});
 
 	});
 
